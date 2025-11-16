@@ -17,13 +17,11 @@ const HealthProviderRegister = () => {
     if (/[A-Z]/.test(p)) score++;
     if (/[a-z]/.test(p)) score++;
     if (/\d/.test(p)) score++;
+    if (/[@#$%^&*!~?><+-]/.test(p)) score++;
     return score;
   };
 
-  const strength = passwordStrength(password);
-  const strengthText = strength === 4 ? "Strong" : strength >= 2 ? "Medium" : "Weak";
-  const strengthColor = strength === 4 ? "text-green-500" : strength >= 2 ? "text-yellow-500" : "text-red-500";
-  const barColor = strength === 4 ? "bg-green-500" : strength >= 2 ? "bg-yellow-500" : "bg-red-500";
+  
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -37,6 +35,11 @@ const HealthProviderRegister = () => {
     bio: "",
     profile: null,
   });
+
+  const strength = passwordStrength(formData.password);
+  const strengthText = strength === 4 ? "Strong" : strength >= 2 ? "Medium" : "Weak";
+  const strengthColor = strength === 4 ? "text-green-500" : strength >= 2 ? "text-yellow-500" : "text-red-500";
+  const barColor = strength === 4 ? "bg-green-500" : strength >= 2 ? "bg-yellow-500" : "bg-red-500";
 
   const input =
     "w-full px-3 py-3 bg-transparent border-b-2 border-gray-600 text-white focus:border-gold outline-none";
@@ -53,7 +56,7 @@ const HealthProviderRegister = () => {
     e.preventDefault();
     if (strength < 2) return toast.error("Password must be at least medium strength.");
     
-        setFormData(prev => ({ ...prev, password }));
+        setFormData(prev => ({ ...prev, strength }));
         setLoading(true);
 
     try {
@@ -301,6 +304,15 @@ const HealthProviderRegister = () => {
                   })
                 }
               />
+            </div>
+
+            <div className="w-full text-left text-sm">
+              <div className="h-1 bg-gray-700 rounded-full mb-1">
+                <div className={`h-full rounded-full transition-all duration-300 ${barColor}`} style={{ width: `${(strength/4)*100}%` }}></div>
+              </div>
+              <p className={`font-semibold ${strengthColor} flex gap-4`}>
+                Strength: {strengthText} {strength < 4 ? <span className="text-gray-400">(8+ chars, chars, Upper, Lower, Number)</span> :  <Check /> }
+              </p>
             </div>
 
             <div className="flex justify-between pt-4">
