@@ -12,6 +12,7 @@ import HomePage from "./components/HomePage.jsx";
 import Register from "./components/Register.jsx";
 import Login from "./components/LoginForm.jsx";
 import ForgotPassword from "./components/ForgotPassword.jsx";
+import ProviderRegister from "./components/HealthProviderRegister.jsx";
 
 // User Dashboard Components
 import UserDashboard from "./user-components/UserDashboard.jsx";
@@ -112,20 +113,27 @@ function App() {
             <Route path="/" element={<PageWrapper><MobileLandingPage /></PageWrapper>} />
             <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
             <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
+            <Route path="/provider-register" element={<PageWrapper><ProviderRegister /></PageWrapper>} />
             <Route path="/forgot" element={<PageWrapper><ForgotPassword /></PageWrapper>} />
             <Route path="/verify-email" element={<PageWrapper><EmailVerify /></PageWrapper>} />
+
+            {/* User Dashboard */}
             <Route path="/dashboard" element={<PageWrapper><UserDashboard /></PageWrapper>} />
             <Route path="/mood-entry" element={<PageWrapper><MoodEntry /></PageWrapper>} />
             <Route path="/mood-questions/:mood" element={<PageWrapper><MoodQuestions /></PageWrapper>} />
             <Route path="/explore" element={<PageWrapper><ResourcePage /></PageWrapper>} />
             <Route path="/track" element={<PageWrapper><TrackMoodPage /></PageWrapper>} />
             <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+
+            {/* Admin Dashboard */}
+            <Route path="/admin-dashboard" element={<PageWrapper><AdminDashboard /></PageWrapper>} />
           </>
         ) : (
           <>
             <Route path="/" element={<PageWrapper><HomePage /></PageWrapper>} />
             <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
             <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
+            <Route path="/provider-register" element={<PageWrapper><ProviderRegister /></PageWrapper>} />
             <Route path="/forgot" element={<PageWrapper><ForgotPassword /></PageWrapper>} />
             <Route path="/verify-email" element={<PageWrapper><EmailVerify /></PageWrapper>} />
             {/* User Dashboard */}

@@ -53,13 +53,13 @@ const UserTypeStep = ({ onSelectClient }) => (
       Start your journey to mental wellness
     </h1>
     <div className="flex flex-col sm:flex-row gap-6 w-full">
-      <button
+      <Link
         className="flex flex-col items-center justify-center p-6 sm:p-8 w-full border-2 border-gold rounded-xl bg-transparent text-gold shadow-lg transition duration-300 hover:bg-gold hover:text-[#062b2b]"
-        disabled
+        to={'../provider-register'}
       >
         <h2 className="text-2xl font-bold mb-1">Health Provider</h2>
         <p className="text-sm text-gray-400 transition duration-300">I provide health care</p>
-      </button>
+      </Link>
       <button
         className="flex flex-col items-center justify-center p-6 sm:p-8 w-full border-2 border-gold rounded-xl bg-transparent text-gold shadow-lg transition duration-300 hover:bg-gold hover:text-[#062b2b]"
         onClick={onSelectClient}
@@ -290,6 +290,7 @@ const CompletionStep = ({ formData }) => (
 
 // ------------------- Main Register Component -------------------
 const Register = () => {
+  
   const [currentStep, setCurrentStep] = useState(0);
   const [formData, setFormData] = useState({});
 
@@ -297,6 +298,8 @@ const Register = () => {
   const handleNext = () => setCurrentStep(prev => prev + 1);
   const handleBack = () => setCurrentStep(prev => prev - 1);
   const handleComplete = () => setCurrentStep(5);
+
+  
 
   const renderStep = () => {
     const stepProps = { onNext: handleNext, onBack: handleBack, setFormData, formData };

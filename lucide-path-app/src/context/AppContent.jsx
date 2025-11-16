@@ -10,19 +10,23 @@ export const AppContextProvider = (props) => {
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [userData, setUserData] = useState(null);
   const [moods, setMoods] = useState([]); // ✅ Store moods
+  const [loading, setLoading] = useState(true);
+
 
   // --- Load from localStorage on mount ---
   useEffect(() => {
     const storedUser = localStorage.getItem("userData");
+  
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUserData(parsedUser);
       setIsLoggedin(true);
-
-      // Optionally fetch moods after reload
       fetchUserMoods(parsedUser._id);
     }
+  
+    setLoading(false);  // done checking
   }, []);
+  
 
   // --- Persist userData in localStorage whenever it changes ---
   useEffect(() => {
@@ -92,6 +96,7 @@ export const AppContextProvider = (props) => {
 
   const value = {
     backendUrl,
+    loading, 
     isLoggedin,
     setIsLoggedin,
     userData,
