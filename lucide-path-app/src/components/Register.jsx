@@ -23,7 +23,7 @@ const FormStepWrapper = ({ step, title, subtitle, children, onBack }) => (
       {[1, 2, 3, 4].map((s) => (
         <div
           key={s}
-          className={`h-2 w-1/4 rounded-full ${s <= step ? "bg-gold shadow-inner" : "bg-gray-700"}`}
+          className={`h-2 w-1/4 rounded-full ${s <= step ? "bg-gold shadow-inner" : "bg-gray-10"}`}
         ></div>
       ))}
     </div>

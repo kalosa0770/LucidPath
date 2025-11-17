@@ -16,6 +16,8 @@ const Login = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+
+  // client login
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -74,32 +76,32 @@ const Login = () => {
     setLoading(true);
 
     try {
-      // const res = await axios.post(
-      //   backendUrl + "/api/auth/login",
-      //   { email: email.trim(), password },
-      //   { withCredentials: true }
-      // );
+      const res = await axios.post(
+        backendUrl + "/api/providers/login",
+        { email: email.trim(), password },
+        { withCredentials: true }
+      );
 
-      // if (res.data.success) {
+      if (res.data.success) {
         setIsLoggedin(true);
       
         // Get the user object from getUserData
         // const user = await getUserData();
       
         // Show toast with correct first name
-        // toast.success(`Welcome Back, ${user?.firstName || "User"}!`,{
-        //     className: "bg-gold text-dark-teal shadow-lg rounded-xl border-2 border-teal",
-        //     bodyClassName: "font-nunito font-bold text-lg",
-        //     progressClassName: "bg-dark-teal",
-        //     autoClose: 2500,
-        // });
+        toast.success(`Welcome Back!`,{
+            className: "bg-gold text-dark-teal shadow-lg rounded-xl border-2 border-teal",
+            bodyClassName: "font-nunito font-bold text-lg",
+            progressClassName: "bg-dark-teal",
+            autoClose: 2500,
+        });
       
         setTimeout(() => {
           navigate('/admin-dashboard', { state: { fromLogin: true } });
         }, 2000);
-      // } else {
-      //   toast.error(res.data.message || "Login failed.");
-      // }
+      } else {
+        toast.error(res.data.message || "Login failed.");
+      }
       
     
     } catch (err) {

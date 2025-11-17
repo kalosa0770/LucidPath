@@ -3,11 +3,15 @@ import cors from "cors";
 import 'dotenv/config';
 import cookieParser from "cookie-parser";
 
+import path from "path";
+
 import connectDB from './config/mongodb.js'; 
 import authRouter from './routes/authRoutes.js' 
 import userRouter from './routes/userRoutes.js';
 import moodRoutes from "./routes/moodRoutes.js";
 import journalRoutes from './routes/journalRoutes.js';
+
+import providerRoutes from "./routes/providerRoutes.js";
 
 const app = express();
 const port = process.env.PORT || 3001
@@ -33,13 +37,17 @@ app.use(cors({
     origin: ['http://localhost:5173', 'https://lucid-path.vercel.app'],
     credentials: true
 }));
+// serve uploaded files
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 //API Endpoints
 app.get('/', ( req, res ) => res.send("API working fine"));
 app.use('/api/auth', authRouter);
 app.use('/api/user', userRouter);
 app.use("/api/moods", moodRoutes);
-app.use('/api/journals', journalRoutes)
+app.use('/api/journals', journalRoutes);
+app.use("/api/providers", providerRoutes);
+
 app.listen(port, () => {
     console.log(`Server running on PORT:${port}`);
 });
