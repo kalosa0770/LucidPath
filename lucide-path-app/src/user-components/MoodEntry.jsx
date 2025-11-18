@@ -68,7 +68,7 @@ const MoodEntry = ({ onMoodSelect }) => {
   };
 
   return (
-    <div className="flex flex-col py-6 px-5 md:py-8 md:px-8 rounded-2xl bg-white/10 border border-[#1a3a3a] w-full">
+    <div className="flex flex-col  w-full">
       <h2 className="text-lg md:text-xl font-extrabold mb-3 text-gold flex items-center gap-2">
         <span className="bg-gold/20 p-2 rounded-full">
           <Lightbulb className="w-5 h-5 text-dark-gold" />
@@ -80,14 +80,14 @@ const MoodEntry = ({ onMoodSelect }) => {
         Tap an emoji that best describes today
       </p>
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4 justify-items-center">
+      <div className="flex overflow overflow-x-auto gap-4 justify-items-center w-full">
         {moods.map((mood) => (
           <button
             key={mood.name}
             onClick={() => handleSelectMood(mood)}
-            className={`flex flex-col text-2xl md:text-3xl rounded-full p-3 transition-all duration-200 shadow-md 
+            className={`flex flex-col text-2xl md:text-3xl bg-white/30 rounded-2xl p-3 transition-all duration-200 shadow-md 
               ${
-                selectMood?.name === mood.name
+                selectMood?.name === mood.name 
                   ? "bg-gold text-teal-950 scale-110 shadow-[0_0_15px_rgba(255,215,0,0.5)]"
                   : "hover:bg-teal-800/40 hover:scale-105"
               }`}

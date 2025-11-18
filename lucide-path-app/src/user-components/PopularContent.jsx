@@ -1,37 +1,52 @@
-import React from "react";
+import React, {useState} from "react";
 // import Slider from "react-slick";
 // import "slick-carousel/slick/slick.css";
 // import "slick-carousel/slick/slick-theme.css";
-import placeHolder from '../assets/hub.jpg'
+import placeHolder from '../assets/hub.jpg';
+import mindfulness from '../assets/mindfulness.jpg';
+import stress from '../assets/stress.jpg';
 
-const cardData = [
-    {
-        title: "Mindfulness",
-        text: "The mind is the greatest assest of a human-being. Get started to know how to.",
-        img: placeHolder, 
-        accentColor: 'text-orange-400'
-    },
-    {
-        title: "Stress",
-        text: "Unlock your inner control, take hold of your stressors today through our curated resources.",
-        img: placeHolder,
-        accentColor: 'text-emerald-400'
-    },
-    {
-        title: "Depression",
-        text: "Dont be a target for mental distress. Know how to handle depression in these five steps",
-        img: placeHolder,
-        accentColor: 'text-orange-400'
-    },
-    {
-        title: "All in one",
-        text: "Offering healthcare through our curated resources to take hold of your daily stressors.",
-        img: placeHolder,
-        accentColor: 'text-emerald-400'
-    },
-];
 
 const PopularContent = () => {
+    const [read, setRead] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+
+    const readContent = () => {
+        setRead(!read);
+        setOpenModal(true);
+    }
+    
+    const cardData = [
+        {
+            title: "How to",
+            text: "The mind is the greatest assest of a human-being. Get started to know how to.",
+            img: mindfulness, 
+            accentColor: 'text-orange-400',
+            btn: <button className="px-5 md:px-6 py-2 md:py-3 bg-teal-500 text-white rounded-lg 
+            hover:bg-teal-600 transition-all duration-200 
+            transform hover:scale-105 self-start text-sm md:text-base
+            border border-teal-600 hover:border-teal-700 shadow-md" onClick={readContent}>Read</button>
+        },
+        {
+            title: "Stress",
+            text: "Unlock your inner control, take hold of your stressors today through our curated resources.",
+            img: stress,
+            accentColor: 'text-emerald-400'
+        },
+        {
+            title: "Depression",
+            text: "Dont be a target for mental distress. Know how to handle depression in these five steps",
+            img: placeHolder,
+            accentColor: 'text-orange-400'
+        },
+        {
+            title: "All in one",
+            text: "Offering healthcare through our curated resources to take hold of your daily stressors.",
+            img: placeHolder,
+            accentColor: 'text-emerald-400'
+        },
+    ];
+    
 
     return (
         <div className="flex flex-col w-full mt-10">
@@ -72,12 +87,7 @@ const PopularContent = () => {
                                     </p>
                             
                                     {/* CTA Button */}
-                                    <button className="px-5 md:px-6 py-2 md:py-3 bg-teal-500 text-white rounded-lg 
-                                                        hover:bg-teal-600 transition-all duration-200 
-                                                        transform hover:scale-105 self-start text-sm md:text-base
-                                                        border border-teal-600 hover:border-teal-700 shadow-md">
-                                        Learn More
-                                    </button>
+                                    {card.btn}
                                 </div>
                             </div>
                         </div>
