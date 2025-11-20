@@ -24,6 +24,7 @@ import Profile from "./user-components/Profile.jsx";
 import SplashScreen from "./components/SplashScreen.jsx";
 import EmailVerify from "./components/EmailVerify.jsx";
 import MobileLandingPage from "./components/MobileLandingPage.jsx";
+import ReadContent from "./user-components/ReadContent.jsx";
 
 // Admin Dashboard Components
 import AdminDashboard from "./admin-components/AdminDashboard.jsx";
@@ -124,6 +125,9 @@ function App() {
             <Route path="/explore" element={<PageWrapper><ResourcePage /></PageWrapper>} />
             <Route path="/track" element={<PageWrapper><TrackMoodPage /></PageWrapper>} />
             <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+            <Route path="/read-content/:title" element={<ReadContent />} />
+
+
 
             {/* Admin Dashboard */}
             <Route path="/admin-dashboard" element={<PageWrapper><AdminDashboard /></PageWrapper>} />
@@ -143,6 +147,8 @@ function App() {
             <Route path="/explore" element={<PageWrapper><ResourcePage /></PageWrapper>} />
             <Route path="/track" element={<PageWrapper><TrackMoodPage /></PageWrapper>} />
             <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+            <Route path="/read-content/:title" element={<ReadContent />} />
+
 
             {/* Admin Dashboard */}
             <Route path="/admin-dashboard" element={<PageWrapper><AdminDashboard /></PageWrapper>} />
