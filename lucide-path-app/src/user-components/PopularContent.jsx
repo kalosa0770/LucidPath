@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import placeHolder from '../assets/hub.jpg';
 import mindfulness from '../assets/mindfulness.jpg';
 import stress from '../assets/stress.jpg';
+import modernStress from '../assets/modern-stressors.jpg';
+import letsdown from '../assets/lets-you-down.jpg';
 import { useNavigate } from 'react-router-dom';
 
 const PopularContent = () => {
@@ -13,16 +15,16 @@ const PopularContent = () => {
             img: mindfulness,
         },
         {
-            title: "The Best Way to Get Through a Tough Day",
+            title: "10 Tips for Coping with Violent and Stressful News",
             img: stress,
         },
         {
-            title: "Depression",
-            img: placeHolder,
+            title: "Protect Your Peace from Modern Stressors",
+            img: modernStress,
         },
         {
-            title: "All in one",
-            img: placeHolder,
+            title: "What to Do When a Loved One Lets You Down",
+            img: letsdown,
         },
     ];
 
