@@ -2,13 +2,13 @@ import React, { useState, useContext, useEffect } from "react";
 import { AppContent } from "../context/AppContent";
 import axios from "axios";
 import { Listbox } from '@headlessui/react';
-import { ChevronDownIcon } from 'lucide-react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ChevronDownIcon, User, Mail, Phone, UserCheck, Hourglass, Briefcase, UserCircle, LockKeyhole } from 'lucide-react';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom'; // for redirect
 
 const inputBase = "block w-full py-3 px-0 text-white bg-transparent appearance-none border-0 border-b-2 border-gray-600 focus:border-gold focus:outline-none focus:ring-0 peer placeholder-transparent";
-const labelBase = "absolute text-gray-400 duration-300 transform -translate-y-6 scale-75 top-4 z-10 origin-[0] peer-focus:text-gold peer-focus:-translate-y-6 peer-focus:scale-75 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-4 peer-placeholder-shown:left-0";
+const labelBase = "flex gap-4 text-sm absolute text-gray-400 duration-300 transform -translate-y-6 scale-75 top-4 z-10 origin-[0] peer-focus:text-gold peer-focus:-translate-y-6 peer-focus:scale-75 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-4 peer-placeholder-shown:left-0";
 
 const professions = [
   "Psychologist",
@@ -21,9 +21,9 @@ const professions = [
 const ProfessionSelect = ({ value, onChange }) => (
   <Listbox value={value} onChange={onChange}>
     <div className="relative w-full mb-6">
-      <label className="text-gray-400 mb-1 block">Profession</label>
+      {/* <label className="text-gray-400 mb-1 flex gap-4"><Briefcase className="w-5 h-5"/>Profession</label> */}
       <Listbox.Button className={inputBase}>
-        <span className="block truncate text-start">{value || "Select Profession"}</span>
+        <span className="block truncate text-start flex gap-4"><Briefcase className="w-5 h-5"/>{value || "Select Profession"}</span>
         <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
           <ChevronDownIcon className="h-5 w-5 text-white" />
         </span>
@@ -54,10 +54,12 @@ const ProviderRegister = () => {
   const [profileUrl, setProfileUrl] = useState("");
   const [formData, setFormData] = useState({
     firstName: "", lastName: "", email: "", phone: "",
-    password: "", licenseNumber: "", experience: "",
+    password: "", title: "", experience: "",
     profession: "", bio: "",
   });
   const [passwordRules, setPasswordRules] = useState({ length:false, uppercase:false, number:false, special:false });
+  const [showPassword, setShowPassword] = useState(false);
+
 
   useEffect(() => setPasswordRules(validatePassword(formData.password)), [formData.password]);
 
@@ -129,19 +131,19 @@ const ProviderRegister = () => {
               <h2 className="text-xl font-bold text-gold">Personal Information</h2>
               <div className="relative w-full mb-4 group">
                 <input type="text" name="firstName" onChange={handleChange} className={inputBase} required placeholder=" " />
-                <label className={labelBase}>First Name</label>
+                <label className={labelBase}><User className="w-5 h-5"/>First Name</label>
               </div>
               <div className="relative w-full mb-4 group">
                 <input type="text" name="lastName" onChange={handleChange} className={inputBase} required placeholder=" " />
-                <label className={labelBase}>Last Name</label>
+                <label className={labelBase}><User className="w-5 h-5"/>Last Name</label>
               </div>
               <div className="relative w-full mb-4 group">
                 <input type="email" name="email" onChange={handleChange} className={inputBase} required placeholder=" " />
-                <label className={labelBase}>Email</label>
+                <label className={labelBase}><Mail className="w-5 h-5"/>Email</label>
               </div>
               <div className="relative w-full mb-4 group">
                 <input type="text" name="phone" onChange={handleChange} className={inputBase} required placeholder=" " />
-                <label className={labelBase}>Phone Number</label>
+                <label className={labelBase}><Phone className="w-5 h-5"/>Phone Number</label>
               </div>
               <button type="button" className="w-full bg-teal text-white py-2 rounded" onClick={nextStep}>Next</button>
             </div>
@@ -152,17 +154,17 @@ const ProviderRegister = () => {
             <div className="space-y-4 text-white">
               <h2 className="text-xl font-bold text-gold">Professional Details</h2>
               <div className="relative w-full mb-4 group">
-                <input type="text" name="licenseNumber" onChange={handleChange} className={inputBase} required placeholder=" " />
-                <label className={labelBase}>License Number</label>
+                <input type="text" name="title" onChange={handleChange} className={inputBase} required placeholder=" " />
+                <label className={labelBase}><UserCheck className="w-5 h-5"/>Title(Miss, Mrs, Mr)</label>
               </div>
               <div className="relative w-full mb-4 group">
                 <input type="number" name="experience" onChange={handleChange} className={inputBase} required placeholder=" " />
-                <label className={labelBase}>Years of Experience</label>
+                <label className={labelBase}><Hourglass className="w-5 h-5"/>Years of Experience</label>
               </div>
               <ProfessionSelect value={formData.profession} onChange={(val) => setFormData({ ...formData, profession: val })} />
               <div className="relative w-full mb-4 group">
                 <textarea name="bio" onChange={handleChange} className={inputBase} placeholder=" "></textarea>
-                <label className={labelBase}>Bio</label>
+                <label className={labelBase}><UserCircle className="w-5 h-5"/>Bio</label>
               </div>
               <div className="flex justify-between">
                 <button type="button" className="bg-gray/40 text-white py-2 px-4 rounded" onClick={prevStep}>Back</button>
@@ -176,8 +178,12 @@ const ProviderRegister = () => {
             <div className="space-y-4 text-white">
               <h2 className="text-xl font-bold text-gold">Security & Profile</h2>
               <div className="relative w-full mb-4 group">
-                <input type="password" name="password" onChange={handleChange} className={inputBase} required placeholder=" " />
-                <label className={labelBase}>Password</label>
+                <input type={showPassword ? 'text' : 'password'} name="password" onChange={handleChange} className={inputBase} required placeholder=" " />
+                <label className={labelBase}><LockKeyhole className="w-5 h-5"/>Password</label>
+              </div>
+              <div className="flex items-center mb-4">
+                <input type="checkbox" id="showPassword" className="mr-2" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
+                <label htmlFor="showPassword" className="text-white text-sm">Show Password</label>
               </div>
               <div className="text-sm space-y-1 grid grid-cols-2">
                 <p className={`${passwordRules.length ? "text-gold" : "text-white"}`}>• At least 8 characters</p>

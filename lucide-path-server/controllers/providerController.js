@@ -15,7 +15,7 @@ export const registerProvider = async (req, res) => {
       phone,
       password,
       profession,
-      licenseNumber,
+      title,
       experience,
       bio,
       profile, // now expects the Cloudinary URL
@@ -42,7 +42,7 @@ export const registerProvider = async (req, res) => {
       phone,
       password: hashedPassword,
       profession,
-      licenseNumber,
+      title,
       experience,
       bio,
       profile: profile, // store Cloudinary URL
@@ -170,7 +170,7 @@ export const updateProfile = async (req, res) => {
       "lastName",
       "phone",
       "profession",
-      "licenseNumber",
+      "title",
       "experience",
       "bio",
     ];

@@ -7,7 +7,7 @@ const providerSchema = new mongoose.Schema({
   phone:     { type: String, required: true, trim: true },
   password:  { type: String, required: true },
   profession: { type: String, required: true },
-  licenseNumber: { type: String, required: true, trim: true },
+  title: { type: String, required: true, trim: true },
   experience: { type: Number, default: 0 },
   bio:       { type: String, default: "" },
   profileImageUrl: { type: String, default: "" },
