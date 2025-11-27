@@ -94,6 +94,24 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  // fetch admin data function
+  const fetchAdminData = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/providers/me", {
+        withCredentials: true,
+      });
+      if (data.success) {
+        return data.adminData;
+      } else {
+        toast.error(data.message);
+        return null;
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to fetch admin data");
+      return null;
+    }
+  };
+
   const value = {
     backendUrl,
     loading, 
@@ -105,6 +123,7 @@ export const AppContextProvider = (props) => {
     logout,
     moods, // ✅ Provide moods in context
     fetchUserMoods,
+    fetchAdminData,
   };
 
   return <AppContent.Provider value={value}>{props.children}</AppContent.Provider>;

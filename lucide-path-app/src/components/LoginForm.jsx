@@ -8,13 +8,14 @@ import { LogInIcon } from 'lucide-react';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { backendUrl, setIsLoggedin, getUserData } = useContext(AppContent);
+  const { backendUrl, setIsLoggedin, getUserData, fetchAdminData } = useContext(AppContent);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [profession, setProfession] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
 
   // client login
@@ -85,11 +86,11 @@ const Login = () => {
       if (res.data.success) {
         setIsLoggedin(true);
       
-        // Get the user object from getUserData
-        // const user = await getUserData();
+        // Get the user object from getAdminData
+         const admin = await fetchAdminData();
       
         // Show toast with correct first name
-        toast.success(`Welcome Back!`,{
+        toast.success(`Welcome Back, ${admin?.title || ""} ${admin?.firstName || "Admin"}!!!`,{
             className: "bg-gold text-dark-teal shadow-lg rounded-xl border-2 border-teal",
             bodyClassName: "font-nunito font-bold text-lg",
             progressClassName: "bg-dark-teal",
@@ -156,7 +157,7 @@ const Login = () => {
         {isReceiveCare && (
           <>
             {/* User Dashboard Form */}
-            <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6 w-full">
+            <form onSubmit={handleSubmit} className="flex flex-col items-start gap-6 w-full">
               {/* Email Input */}
               <div className="relative w-full group">
                 <input
@@ -173,7 +174,7 @@ const Login = () => {
               {/* Password Input */}
               <div className="relative w-full group mb-2">
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={inputBase}
@@ -181,7 +182,14 @@ const Login = () => {
                   required
                 />
                 <label className={labelBase}>Password</label>
+                
+                
               </div>
+              <div className="text-sm text-whutw flex items-center">
+                  <input type="checkbox" id="showPassword" className="mr-2" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
+                  <label htmlFor="showPassword" className="text-white text-sm">Show Password</label>  
+              </div>
+
 
               {/* Forgot Password */}
               <div className="w-full text-right text-sm">
@@ -210,7 +218,7 @@ const Login = () => {
           {isGiveCare && (
           <>
             {/* Admin dashboard Form */}
-            <form onSubmit={handleProviderSubmit} className="flex flex-col items-center gap-6 w-full">
+            <form onSubmit={handleProviderSubmit} className="flex flex-col items-start gap-6 w-full">
               {/* Email Input */}
               <div className="relative w-full group">
                 <input
@@ -240,7 +248,7 @@ const Login = () => {
               {/* Password Input */}
               <div className="relative w-full group mb-2">
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={inputBase}
@@ -248,6 +256,10 @@ const Login = () => {
                   required
                 />
                 <label className={labelBase}>Password</label>
+              </div>
+              <div className="text-sm text-whutw flex items-center">
+                  <input type="checkbox" id="showPassword" className="mr-2" checked={showPassword} onChange={() => setShowPassword(!showPassword)} />
+                  <label htmlFor="showPassword" className="text-white text-sm">Show Password</label>  
               </div>
 
               {/* Forgot Password */}
