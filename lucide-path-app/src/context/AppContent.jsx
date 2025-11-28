@@ -112,6 +112,46 @@ export const AppContextProvider = (props) => {
     }
   };
 
+  // Send OTP
+  const sendPasswordResetOtp = async (email) => {
+    try {
+      const { data } = await axios.post(
+        `${backendUrl}/api/auth/send-reset-otp`,
+        { email }
+      );
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Failed to send OTP");
+    }
+  };
+
+  // Verify OTP
+  const verifyPasswordResetOTP = async (email, otp) => {
+    try {
+      const { data } = await axios.post(
+        `${backendUrl}/api/auth/verify-reset-otp`,
+        { email, otp }
+      );
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "OTP verification failed");
+    }
+  };
+
+  // Reset Password
+  const resetPasswordFinal = async (email, newPassword) => {
+    try {
+      const { data } = await axios.post(
+        `${backendUrl}/api/auth/reset-password`,
+        { email, newPassword }
+      );
+      return data;
+    } catch (error) {
+      throw new Error(error.response?.data?.message || "Password reset failed");
+    }
+  };
+
+
   const value = {
     backendUrl,
     loading, 
@@ -124,6 +164,10 @@ export const AppContextProvider = (props) => {
     moods, // ✅ Provide moods in context
     fetchUserMoods,
     fetchAdminData,
+    // Password reset functions
+    sendPasswordResetOtp,
+    verifyPasswordResetOTP,
+    resetPasswordFinal,
   };
 
   return <AppContent.Provider value={value}>{props.children}</AppContent.Provider>;
