@@ -46,7 +46,7 @@ const sendMail = async (to, subject, message, ctaText = null, ctaLink = null) =>
         </p>
       </div>
       <div style="background: #f9fafb; text-align: center; padding: 10px; font-size: 12px; color: #666;">
-        &copy; ${new Date().getFullYear()} Golden Swift Bank. All rights reserved.
+        &copy; ${new Date().getFullYear()} Lucid Path | Your wellness companion. All rights reserved.
       </div>
     </div>
   </div>

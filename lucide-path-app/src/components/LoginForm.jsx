@@ -265,7 +265,7 @@ const Login = () => {
               {/* Forgot Password */}
               <div className="w-full text-right text-sm">
                 <Link
-                  to="/forgot"
+                  to="/forgot-password"
                   className="text-gold font-extrabold hover:text-dark-gold transition duration-150"
                 >
                   Forgot Password?

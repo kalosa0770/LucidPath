@@ -6,6 +6,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 const ResetPassword = () => {
   const { resetPasswordFinal } = useContext(AppContent);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const passwordComplexityRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -17,14 +21,20 @@ const ResetPassword = () => {
     navigate("/forgot-password");
   }
 
+  const passwordToggle = () => {
+    setShowPassword(!showPassword);
+  }
+
   const handleReset = async (e) => {
     e.preventDefault();
-
+    if (!passwordComplexityRegex.test(password)) {
+      toast.error("Password does not meet complexity requirements.");
+      return;
+    }
     try {
       const res = await resetPasswordFinal({ email, password });
-
       if (res.success) {
-        toast.success("Password reset successfully!");
+        toast.success("Password reset successfully! Redirecting to log in page.");
         navigate("/login");
       } else {
         toast.error(res.message);
@@ -43,7 +53,7 @@ const ResetPassword = () => {
         <form onSubmit={handleReset} className="space-y-6">
           <div className="relative w-full mb-4 group">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -52,6 +62,25 @@ const ResetPassword = () => {
             />
             <label className="absolute text-white duration-300 transform -translate-y-6 scale-75 top-4 z-10 origin-[0] peer-focus:text-gold peer-focus:-translate-y-6 peer-focus:scale-75 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-4 peer-placeholder-shown:left-0" htmlFor="password">
               New Password
+            </label>
+          </div>
+
+          {password && !passwordComplexityRegex.test(password) && (
+            <p className="text-sm text-danger mb-4">
+              Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.
+            </p>
+          )}
+
+          <div className="flex">
+            <input
+              type="checkbox"
+              id="showPassword"
+              checked={showPassword}
+              onChange={passwordToggle}
+              className="mr-2"
+            />
+            <label htmlFor="showPassword" className="text-white select-none">
+              Show Password
             </label>
           </div>
           <button

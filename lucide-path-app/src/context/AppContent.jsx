@@ -139,18 +139,17 @@ export const AppContextProvider = (props) => {
   };
 
   // Reset Password
-  const resetPasswordFinal = async (email, newPassword) => {
+  const resetPasswordFinal = async ({ email, password }) => {
     try {
       const { data } = await axios.post(
         `${backendUrl}/api/auth/reset-password`,
-        { email, newPassword }
+        { email, newPassword: password }
       );
       return data;
     } catch (error) {
       throw new Error(error.response?.data?.message || "Password reset failed");
     }
   };
-
 
   const value = {
     backendUrl,

@@ -265,47 +265,32 @@ export const verifyResetOtp = async (req, res) => {
 // Reset user password
 
 export const resetPassword = async (req, res) => {
-
-  const { email, otp, newPassword } = req.body || {};
-
-  // Validate request
-  if (!email || !otp || !newPassword) {
-    return res.json({ success: false, message: 'Email, OTP and new password are required' });
+  const { email, newPassword } = req.body;
+  if (!email || !newPassword) {
+    return res.json({ success: false, message: "Email and new password are required" });
   }
 
   try {
     const user = await userModel.findOne({ email });
-
     if (!user) {
-      return res.json({ success: false, message: 'User not found' });
+      return res.json({ success: false, message: "User not found" });
     }
-
-    // Validate OTP
-    if (!user.resetOtp || user.resetOtp !== otp) {
-      return res.json({ success: false, message: 'Invalid OTP' });
-    }
-
-    // Check expiry
-    if (user.resetOtpExpireAt < Date.now()) {
-      return res.json({ success: false, message: 'OTP expired. Please request a new one.' });
-    }
-
-    // Hash new password
     const hashedPassword = await bcrypt.hash(newPassword, 10);
-
     user.password = hashedPassword;
-
-    // Clear OTP fields
-    user.resetOtp = "";
-    user.resetOtpExpireAt = 0;
-
     await user.save();
 
-    return res.json({
-      success: true,
-      message: 'Your password has been successfully reset'
-    });
-
+    try {
+      await sendMail(
+        user.email,
+        'Lucid Path - Password Reset Successful',
+        `Hello ${user.firstName}, your password has been reset successfully. If you did not initiate this change, please contact support immediately.`
+      );
+      console.log('Password reset confirmation email sent successfully');
+    } catch (emailError) {
+      console.error('Email send error:', emailError.message);
+    }
+    
+    return res.json({ success: true, message: "Password reset successfully" });
   } catch (error) {
     return res.json({ success: false, message: error.message });
   }

@@ -16,10 +16,10 @@ Tailwind import
   --color-midnight: #121063;     /* Clean, soft background */
   --color-white: #ffffff;        /* Neutral text background */
   --color-gray: #f1f5f9;         /* Subtle card background */
-  --color-text-dark: #0f172a;    /* Deep readable text for light modes */
-  --color-text-light: #e2e8f0;   /* Soft readable text for dark sections */
+  --color-dark: #0f172a;    /* Deep readable text for light modes */
+  --color-light: #e2e8f0;   /* Soft readable text for dark sections */
   --color-shadow-glow: rgba(255, 215, 0, 0.3); /* Gold glow for UI depth */
-  --color-text-red: red;
+  --color-danger: #8B0000;  /* Dark red for error messages */
   --font-dancing-script: DancingScript-Bold;
   --font-nunito: Nunito-Variable;
   --font-lato: Lato-Regular;

@@ -140,7 +140,7 @@ function App() {
             <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
             <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
             <Route path="/provider-register" element={<PageWrapper><ProviderRegister /></PageWrapper>} />
-            <Route path="/forgot" element={<PageWrapper><ForgotPassword /></PageWrapper>} />
+            <Route path="/forgot-password" element={<PageWrapper><ForgotPassword /></PageWrapper>} />
             <Route path="/verify-email" element={<PageWrapper><EmailVerify /></PageWrapper>} />
             <Route path="/reset-password" element={<PageWrapper><ResetPassword /></PageWrapper>} />
             {/* User Dashboard */}
