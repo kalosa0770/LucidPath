@@ -12,6 +12,7 @@ import HomePage from "./components/HomePage.jsx";
 import Register from "./components/Register.jsx";
 import Login from "./components/LoginForm.jsx";
 import ForgotPassword from "./components/ForgotPassword.jsx";
+import ResetPassword from "./components/ResetPassword.jsx";
 import ProviderRegister from "./components/HealthProviderRegister.jsx";
 
 // User Dashboard Components
@@ -117,6 +118,7 @@ function App() {
             <Route path="/provider-register" element={<PageWrapper><ProviderRegister /></PageWrapper>} />
             <Route path="/forgot" element={<PageWrapper><ForgotPassword /></PageWrapper>} />
             <Route path="/verify-email" element={<PageWrapper><EmailVerify /></PageWrapper>} />
+            <Route path="/reset-password" element={<PageWrapper><ResetPassword /></PageWrapper>} />
 
             {/* User Dashboard */}
             <Route path="/dashboard" element={<PageWrapper><UserDashboard /></PageWrapper>} />
@@ -140,6 +142,7 @@ function App() {
             <Route path="/provider-register" element={<PageWrapper><ProviderRegister /></PageWrapper>} />
             <Route path="/forgot" element={<PageWrapper><ForgotPassword /></PageWrapper>} />
             <Route path="/verify-email" element={<PageWrapper><EmailVerify /></PageWrapper>} />
+            <Route path="/reset-password" element={<PageWrapper><ResetPassword /></PageWrapper>} />
             {/* User Dashboard */}
             <Route path="/dashboard" element={<PageWrapper><UserDashboard /></PageWrapper>} />
             <Route path="/mood-entry" element={<PageWrapper><MoodEntry /></PageWrapper>} />

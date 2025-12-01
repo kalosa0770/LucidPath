@@ -236,6 +236,32 @@ export const sendResetOtp = async (req, res) => {
   }
 };
 
+export const verifyResetOtp = async (req, res) => {
+  const { email, otp } = req.body;
+
+  const user = await userModel.findOne({ email });
+
+  if (!user || user.resetOtp !== otp) {
+    return res.status(400).json({ message: "Invalid OTP" });
+  }
+
+  if (user.resetOtpExpireAt < Date.now()) {
+    return res.status(400).json({ message: "OTP expired" });
+  }
+
+  if (user.resetOtp === otp) {
+    // OTP is valid
+    user.resetOtp = "";
+    user.resetOtpExpireAt = 0;
+    await user.save();
+
+    return res.status(200).json({ success: true, message: "OTP verified successfully" });
+  }
+
+  return res.status(400).json({ success: false, message: "OTP verification failed" });
+};
+
+
 // Reset user password
 
 export const resetPassword = async (req, res) => {
