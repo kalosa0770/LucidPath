@@ -5,7 +5,7 @@ import {
   listProviders, approveProvider, rejectProvider, updateProfile
 } from "../controllers/providerController.js";
 // import { upload } from "../utils/multerConfig.js";
-import auth from "../middleware/admin.js";
+import auth from "../middleware/providerAuth.js";
 import adminOnly from "../middleware/admin.js";
 
 const router = express.Router();
@@ -17,6 +17,10 @@ router.post("/login", loginProvider);
 // Protected
 router.get("/me", auth, getProviderProfile);
 router.put("/me", auth, upload.single("profile"), updateProfile);
+
+// provider -> user messaging (requires providerAuth)
+import { sendMessageToUser } from '../controllers/providerController.js';
+router.post('/message/:userId', auth, sendMessageToUser);
 
 // Admin
 router.get("/", auth, adminOnly, listProviders); // ?status=pending

@@ -21,6 +21,8 @@ import MoodQuestions from "./user-components/MoodQuestions.jsx";
 import MoodEntry from "./user-components/MoodEntry.jsx";
 import ResourcePage from "./user-components/ResourcePage.jsx";
 import TrackMoodPage from "./user-components/TrackMoodPage.jsx";
+import CommunityForum from "./user-components/CommunityForum.jsx";
+import NotificationsPage from "./user-components/NotificationsPage.jsx";
 import Profile from "./user-components/Profile.jsx";
 import SplashScreen from "./components/SplashScreen.jsx";
 import EmailVerify from "./components/EmailVerify.jsx";
@@ -116,7 +118,7 @@ function App() {
             <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
             <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
             <Route path="/provider-register" element={<PageWrapper><ProviderRegister /></PageWrapper>} />
-            <Route path="/forgot" element={<PageWrapper><ForgotPassword /></PageWrapper>} />
+            <Route path="/forgot-password" element={<PageWrapper><ForgotPassword /></PageWrapper>} />
             <Route path="/verify-email" element={<PageWrapper><EmailVerify /></PageWrapper>} />
             <Route path="/reset-password" element={<PageWrapper><ResetPassword /></PageWrapper>} />
 
@@ -126,6 +128,8 @@ function App() {
             <Route path="/mood-questions/:mood" element={<PageWrapper><MoodQuestions /></PageWrapper>} />
             <Route path="/explore" element={<PageWrapper><ResourcePage /></PageWrapper>} />
             <Route path="/track" element={<PageWrapper><TrackMoodPage /></PageWrapper>} />
+            <Route path="/community" element={<PageWrapper><CommunityForum /></PageWrapper>} />
+            <Route path="/notifications" element={<PageWrapper><NotificationsPage /></PageWrapper>} />
             <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
             <Route path="/read-content/:title" element={<ReadContent />} />
 
@@ -149,6 +153,7 @@ function App() {
             <Route path="/mood-questions/:mood" element={<PageWrapper><MoodQuestions /></PageWrapper>} />
             <Route path="/explore" element={<PageWrapper><ResourcePage /></PageWrapper>} />
             <Route path="/track" element={<PageWrapper><TrackMoodPage /></PageWrapper>} />
+              <Route path="/community" element={<PageWrapper><CommunityForum /></PageWrapper>} />
             <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
             <Route path="/read-content/:title" element={<ReadContent />} />
 

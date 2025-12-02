@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useCallback } from "react";
 import {
   LineSquiggle,
+  MessageSquare,
   Calendar,
   BookOpenText,
   PenSquare,
@@ -12,18 +13,10 @@ import axios from "axios";
 import Sidebar from "./Sidebar";
 import FooterNav from "./FooterNav";
 import { AppContent } from "../context/AppContent";
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend);
+import ChartLazy from "../components/ChartLazy";
+import MoodEntry from "./MoodEntry";
+import WeeklyMoodTracker from "./WeeklyMoodTracker";
+import MoodRecommendations from "./MoodRecommendations";
 
 const TrackMoodPage = () => {
   const { userData, backendUrl } = useContext(AppContent);
@@ -32,29 +25,38 @@ const TrackMoodPage = () => {
   const [moods, setMoods] = useState([]);
   const [journals, setJournals] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedMood, setSelectedMood] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [journalContent, setJournalContent] = useState("");
 
+  // fetch functions so we can re-use after mood logging
+  const fetchMoods = useCallback(async () => {
+    if (!userData) return;
+    try {
+      const moodRes = await axios.get(`${backendUrl}/api/moods/${userData._id}`);
+      setMoods(moodRes.data.moods || []);
+    } catch (err) {
+      console.error("Error fetching moods:", err);
+    }
+  }, [backendUrl, userData]);
+
+  const fetchJournals = useCallback(async () => {
+    if (!userData) return;
+    try {
+      const journalRes = await axios.get(`${backendUrl}/api/journals/${userData._id}`);
+      setJournals(journalRes.data.journals || []);
+    } catch (err) {
+      console.error("Error fetching journals:", err);
+    }
+  }, [backendUrl, userData]);
+
   useEffect(() => {
     if (!userData) return;
-
-    const fetchData = async () => {
-      try {
-        const moodRes = await axios.get(`${backendUrl}/api/moods/${userData._id}`);
-        setMoods(moodRes.data.moods || []);
-
-        const journalRes = await axios.get(`${backendUrl}/api/journals/${userData._id}`);
-        setJournals(journalRes.data.journals || []);
-
-        setLoading(false);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [userData, backendUrl]);
+    setLoading(true);
+    Promise.all([fetchMoods(), fetchJournals()])
+      .catch((e) => console.error(e))
+      .finally(() => setLoading(false));
+  }, [userData, fetchMoods, fetchJournals]);
 
   
 
@@ -77,7 +79,6 @@ const TrackMoodPage = () => {
   }
 
   const handleLogMood = () => navigate("/mood-selection");
-  const handleWriteJournal = () => navigate("/write-journal");
   const handleOpenModal = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
@@ -144,6 +145,15 @@ const TrackMoodPage = () => {
     return moodEntry ? moodValues[moodEntry.name] || 3 : null;
   });
 
+  // per-page mood selection (used by MoodEntry and recommendations)
+
+  // when MoodEntry calls back, refresh moods so the chart and trackers update
+  const onMoodSelect = async (mood) => {
+    setSelectedMood(mood);
+    // re-fetch moods from server to reflect saved state
+    await fetchMoods();
+  };
+
   const chartData = {
     labels: daysOfWeek,
     datasets: [
@@ -173,6 +183,21 @@ const TrackMoodPage = () => {
     },
   };
 
+  // determine recommended mood (selected by user or computed from average)
+  const numericData = moodGraphData.filter((d) => d !== null && d !== undefined);
+  const avgNum = numericData.length ? numericData.reduce((a, b) => a + b, 0) / numericData.length : null;
+
+  const avgToMood = (score) => {
+    if (!score) return "Okay";
+    if (score >= 4.5) return "Excited";
+    if (score >= 3.5) return "Happy";
+    if (score >= 2.5) return "Okay";
+    if (score >= 1.5) return "Sad";
+    return "Depressed";
+  };
+
+  const moodForRecommendations = selectedMood?.name || avgToMood(avgNum);
+
   return (
     <div className="flex min-h-screen font-nunito bg-gradient-to-b from-[#0a1f1f] to-[#062b2b] text-white">
       <Sidebar firstName={userData?.firstName || "Guest"} />
@@ -184,7 +209,19 @@ const TrackMoodPage = () => {
             <LineSquiggle className="w-5 h-5 text-white" />
           </div>
           <h2 className="text-2xl font-extrabold text-gold">Mood Insights</h2>
+          
         </div>
+
+        {/* Quick mood entry + weekly summary */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+          <div className="lg:col-span-2">
+            <MoodEntry onMoodSelect={onMoodSelect} />
+          </div>
+
+          <div className="lg:col-span-1">
+            <WeeklyMoodTracker />
+          </div>
+        </section>
 
         {/* Journaling Calendar */}
         <section className="bg-white/10 border border-[#1a3a3a] rounded-2xl p-6 shadow-lg backdrop-blur-sm">
@@ -235,7 +272,12 @@ const TrackMoodPage = () => {
           <p className="text-sm text-gray-400 mb-4">
             Track how your mood changes weekly.
           </p>
-          <Line data={chartData} options={chartOptions} />
+          <ChartLazy data={chartData} options={chartOptions} />
+        </section>
+
+        {/* Recommendations - responsive */}
+        <section className="bg-white/10 border border-[#1a3a3a] rounded-2xl p-6 shadow-lg backdrop-blur-sm">
+          <MoodRecommendations mood={moodForRecommendations} />
         </section>
 
         {/* Journal Entries */}
@@ -284,7 +326,7 @@ const TrackMoodPage = () => {
           <div className="w-full max-w-lg bg-[#0f1a1a] rounded-t-3xl p-6 shadow-2xl transform transition-transform duration-300 ease-in-out">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold text-gold">Write Your Journal</h3>
-              <button onClick={handleCloseModal}>
+              <button onClick={handleCloseModal} aria-label="Close modal" title="Close modal">
                 <X className="text-white w-6 h-6" />
               </button>
             </div>

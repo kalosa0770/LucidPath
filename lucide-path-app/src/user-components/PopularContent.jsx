@@ -58,7 +58,7 @@ const PopularContent = () => {
                                 <div className="mt-3 w-full">
                                     <button
                                         onClick={() => handleRead(card.title)}
-                                        className="bg-gold text-teal rounded-2xl px-3 py-2 w-full font-extrabold hover:shadow-2xl hover:scale-105 transition-all"
+                                        className="bg-gold/30 text-white rounded-2xl px-3 py-2 w-full font-extrabold hover:shadow-2xl hover:scale-105 transition-all"
                                     >
                                         Read
                                     </button>

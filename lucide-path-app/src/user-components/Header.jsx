@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Bell, UserCircle, Zap } from "lucide-react";
+import React, { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { Bell, UserCircle, Zap, MessageSquare } from "lucide-react";
+import { AppContent } from "../context/AppContent";
+
+
 
 // Greeting function
 const getGreeting = () => {
@@ -64,6 +68,8 @@ const quotes = [
   "Every challenge is an opportunity to grow. — Lucid Path",
 ];
 
+
+
 // Get a deterministic "random" index based on today's date
 const getTodaysQuote = () => {
   const today = new Date();
@@ -75,6 +81,12 @@ const getTodaysQuote = () => {
 const Header = ({firstName}) => {
   const [greeting, setGreeting] = useState("");
   const [quote, setQuote] = useState("");
+  const { loginStreak, unreadCount, fetchNotifications, markNotificationsAsRead } = useContext(AppContent);
+  const [openNotifs, setOpenNotifs] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const navigate = useNavigate();
+
+  // On mount, set greeting and quote
 
   useEffect(() => {
     setGreeting(getGreeting());
@@ -86,23 +98,74 @@ const Header = ({firstName}) => {
       {/* Top Icons */}
       <div className="flex justify-between items-center mb-6 w-full">
          {/* App Title (Mobile Only) */}
-        <h1 className="font-dancing-script text-2xl font-extrabold text-gold">
-          Lucid Path
-        </h1>
+        <div className="flex gap-3 items-center">
+            <h1 className="font-nunito text-2xl font-extrabold text-gold underline decoration-dark-gold decoration-4 md:hidden">
+              Today
+            </h1>
+            <div className="ml-auto items-center gap-3">
+              <button
+                onClick={() => navigate('/community')}
+                className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 text-white px-3 py-2 rounded-full text-sm font-semibold transition">
+                <MessageSquare className="w-4 h-4 text-gold" />
+                Community
+              </button>
+            </div>
+        </div>
         {/* Profile Icon */}
         
-          {/* <button className="flex items-center justify-center bg-white backdrop-blur-md rounded-full p-2 text-white hover:scale-110 transition-all duration-200 shadow-md hover:shadow-[0_0_10px_rgba(255,215,0,0.6)]">
-            <UserCircle className="w-5 h-5 md:w-6 md:h-6 text-teal" />
-          </button> */}
+          <div className="flex gap-6 items-center">
+            <div className="relative flex items-center" title={loginStreak ? `${loginStreak} day streak` : "No streak yet"} aria-label={`Login streak: ${loginStreak || 0} days`}>
+                <Zap className="w-5 h-5 md:w-7 md:h-7 fill-dark-gold text-gold" />
+                {loginStreak > 0 && (
+                  <span className="absolute -top-2 -right-2 text-[10px] md:text-xs bg-danger text-white px-1 rounded-full border-2 border-teal">{loginStreak}</span>
+                )}
+              </div>
+            <div className="relative">
+              <button className="relative" aria-label="Notifications" title="Notifications" onClick={async () => {
+                setOpenNotifs(!openNotifs);
+                if (!openNotifs) {
+                  const recent = await fetchNotifications({ page: 1, limit: 6 });
+                  setNotifications(recent || []);
+                }
+              }}>
+                <Bell className="w-5 h-5 md:w-7 md:h-7 fill-dark-gold text-gold" />
+                {/* Notification Badge */}
+                {unreadCount > 0 && (
+                  <span className="absolute -top-2 -right-2 flex items-center justify-center w-5 h-5 rounded-full bg-rose-500 text-[11px] font-semibold text-white border-2 border-teal">{unreadCount > 99 ? '99+' : unreadCount}</span>
+                )}
+              </button>
 
-          {/* Notification Icon */}
-          <button className="relative flex items-center gap-2 justify-center bg-white backdrop-blur-md rounded-full py-2 px-4 text-white hover:scale-110 transition-all duration-200 shadow-md hover:shadow-[0_0_10px_rgba(255,215,0,0.6)]">
-            <h1 className="text-teal">{firstName}</h1>
-            <div className="bg-gray rounded-full border border-gold p-1">
-              <UserCircle className="w-5 h-5 md:w-6 md:h-6 text-teal" />
+              {/* Dropdown */}
+              {openNotifs && (
+                <div className="absolute right-0 mt-3 w-80 bg-[#071515] text-white rounded-xl p-3 border border-white/5 shadow-2xl z-50">
+                  <div className="flex items-center justify-between mb-2">
+                    <h4 className="text-sm font-semibold">Notifications</h4>
+                    <button className="text-xs text-gray-300" onClick={() => { markNotificationsAsRead(); setNotifications(prev => prev.map(n => ({ ...n, read: true }))); }}>Mark all read</button>
+                  </div>
+                  <div className="max-h-64 overflow-auto">
+                    {notifications.length === 0 ? (
+                      <div className="text-xs text-gray-400">No recent notifications</div>
+                    ) : notifications.map(n => (
+                      <div key={n._id} className={`p-2 rounded-lg mb-2 ${n.read ? 'bg-white/2' : 'bg-white/5'}`}>
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <div className="text-xs text-gray-300">{n.message}</div>
+                            <div className="text-2xs text-gray-500 mt-1">{new Date(n.createdAt).toLocaleString()}</div>
+                          </div>
+                          {!n.read && <span className="text-xs text-gold">New</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="mt-3 text-right">
+                    <button onClick={() => { setOpenNotifs(false); navigate('/notifications'); }} className="text-sm text-gray-300 hover:text-white">View all</button>
+                  </div>
+                </div>
+              )}
             </div>
             
-          </button>
+
+          </div>
       </div>
      
 

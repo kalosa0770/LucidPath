@@ -12,6 +12,8 @@ import moodRoutes from "./routes/moodRoutes.js";
 import journalRoutes from './routes/journalRoutes.js';
 
 import providerRoutes from "./routes/providerRoutes.js";
+import forumRoutes from "./routes/forumRoutes.js";
+import notificationRoutes from './routes/notificationRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 3001
@@ -47,6 +49,8 @@ app.use('/api/user', userRouter);
 app.use("/api/moods", moodRoutes);
 app.use('/api/journals', journalRoutes);
 app.use("/api/providers", providerRoutes);
+app.use('/api/forum', forumRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 app.listen(port, () => {
     console.log(`Server running on PORT:${port}`);

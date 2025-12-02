@@ -309,6 +309,8 @@ const AdminDashboard = () => {
     riskCases: 0,
   });
   const [notifications, setNotifications] = useState([]);
+  const [flaggedThreads, setFlaggedThreads] = useState([]);
+  const [flaggedPosts, setFlaggedPosts] = useState([]);
   const [appointments, setAppointments] = useState([]);
   const [clients, setClients] = useState([]);
   const [moodData, setMoodData] = useState([]);
@@ -318,7 +320,6 @@ const AdminDashboard = () => {
   const fetchDashboard = async () => {
     // Example endpoints — replace to match your backend
     try {
-      const cfg = { withCredentials: true };
 
       // Example parallel requests (uncomment and change endpoints)
       // const [statsRes, notesRes, apptRes, clientsRes, moodRes, riskRes, msgsRes] =
@@ -370,6 +371,21 @@ const AdminDashboard = () => {
       setMessages([
         { from: "Sally M", preview: "Thanks for the session earlier...", time: "1h ago" },
       ]);
+      // fetch flagged forum threads for moderation
+      try {
+        const [flagThreadsRes, flagPostsRes] = await Promise.all([
+          axios.get(`${backendUrl}/api/forum/moderation/flagged`, { withCredentials: true }),
+          axios.get(`${backendUrl}/api/forum/moderation/flagged-posts`, { withCredentials: true }),
+        ]);
+
+        if (flagThreadsRes?.data?.success) setFlaggedThreads(flagThreadsRes.data.data || []);
+        if (flagPostsRes?.data?.success) setFlaggedPosts(flagPostsRes.data.data || []);
+        // optionally wire flagged posts into a separate panel later - for now we keep data
+        // if (flagPostsRes?.data?.success) setFlaggedPosts(flagPostsRes.data.data || []);
+      } catch (err) {
+        // ignore for demo or if not authorized
+        console.warn('fetch flagged threads failed', err?.response?.data || err.message);
+      }
     } catch (err) {
       console.error("Failed to fetch dashboard data", err);
     }
@@ -379,6 +395,30 @@ const AdminDashboard = () => {
     fetchDashboard();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const moderateThreadAction = async (id, action) => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/forum/moderation/thread/${id}`, { action }, { withCredentials: true });
+      if (data?.success) {
+        // refresh lists
+        fetchDashboard();
+      }
+    } catch (err) {
+      console.error('moderateThreadAction', err?.response?.data || err.message);
+    }
+  };
+
+  const moderatePostAction = async (id, action) => {
+    try {
+      const { data } = await axios.post(`${backendUrl}/api/forum/moderation/post/${id}`, { action }, { withCredentials: true });
+      if (data?.success) {
+        // refresh moderation lists
+        fetchDashboard();
+      }
+    } catch (err) {
+      console.error('moderatePostAction', err?.response?.data || err.message);
+    }
+  };
 
   return (
     <div className="flex min-h-screen font-nunito bg-gradient-to-b from-[#071b1b] to-[#062b2b] text-white">
@@ -407,6 +447,56 @@ const AdminDashboard = () => {
             </div>
 
             <div className="space-y-6">
+              <div className="p-5 bg-white/5 border border-white/5 rounded-2xl">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-gold font-extrabold">Flagged Threads</h3>
+                  <span className="text-xs text-amber-300">{flaggedThreads.length} awaiting</span>
+                </div>
+                <ul className="space-y-3 text-sm text-gray-200 max-h-44 overflow-auto">
+                  {flaggedThreads.length === 0 ? (
+                    <li className="text-gray-400">No flagged threads</li>
+                  ) : (
+                    flaggedThreads.map((t) => (
+                      <li key={t._id} className="p-2 rounded-md bg-white/3 flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <div className="font-semibold text-white truncate">{t.title}</div>
+                          <div className="text-xs text-gray-400">By {t.author?.firstName || t.author?.email || 'Unknown'}</div>
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <button onClick={() => moderateThreadAction(t._id, 'delete')} className="text-xs text-rose-400">Delete</button>
+                          <button onClick={() => moderateThreadAction(t._id, 'restore')} className="text-xs text-gold">Restore</button>
+                          <button onClick={() => moderateThreadAction(t._id, 'pin')} className="text-xs text-gray-300">Pin</button>
+                        </div>
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </div>
+              <div className="p-5 bg-white/5 border border-white/5 rounded-2xl mt-4">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-gold font-extrabold">Flagged Posts</h3>
+                  <span className="text-xs text-amber-300">{flaggedPosts.length} awaiting</span>
+                </div>
+                <ul className="space-y-3 text-sm text-gray-200 max-h-44 overflow-auto">
+                  {flaggedPosts.length === 0 ? (
+                    <li className="text-gray-400">No flagged posts</li>
+                  ) : (
+                    flaggedPosts.map((p) => (
+                      <li key={p._id} className="p-2 rounded-md bg-white/3 flex items-start justify-between gap-2">
+                        <div className="flex-1">
+                          <div className="font-semibold text-white truncate">{p.content?.slice(0, 140)}</div>
+                          <div className="text-xs text-gray-400">In: {p.thread?.title || 'Unknown thread'}</div>
+                        </div>
+                        <div className="flex gap-2 items-center">
+                          <button onClick={() => moderatePostAction(p._id, 'delete')} className="text-xs text-rose-400">Delete</button>
+                          <button onClick={() => moderatePostAction(p._id, 'restore')} className="text-xs text-gold">Restore</button>
+                          <button onClick={() => moderatePostAction(p._id, 'flag')} className="text-xs text-amber-300">Flag</button>
+                        </div>
+                      </li>
+                    ))
+                  )}
+                </ul>
+              </div>
               <RecentClients clients={clients} />
               <MessagesPanel messages={messages} />
             </div>

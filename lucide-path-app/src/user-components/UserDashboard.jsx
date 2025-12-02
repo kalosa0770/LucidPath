@@ -32,7 +32,7 @@ const UserDashboard = () => {
           <Outlet />
           <div className="mb-10"></div>
         </main>
-        <FooterNav/>
+        <FooterNav firstName={userData?.firstName || "Guest"}/>
       </div>
     </div>
   );

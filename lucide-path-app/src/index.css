@@ -60,18 +60,21 @@ FONTS
 font-family: 'Lato-Regular';
 
 src: url('./assets/fonts/Lato-Regular.ttf') format('truetype');
+font-display: swap;
 }
 
 @font-face {
 font-family: 'Nunito-Variable';
 
 src: url('./assets/fonts/Nunito-VariableFont_wght.ttf') format('truetype');
+font-display: swap;
 }
 
 @font-face {
 font-family: 'DancingScript-Bold';
 
 src: url('./assets/fonts/DancingScript-VariableFont_wght.ttf') format('truetype');
+font-display: swap;
 }
 
 

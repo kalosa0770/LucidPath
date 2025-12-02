@@ -8,7 +8,7 @@ import { LogInIcon } from 'lucide-react';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { backendUrl, setIsLoggedin, getUserData, fetchAdminData } = useContext(AppContent);
+  const { backendUrl, setIsLoggedin, getUserData, fetchAdminData, recordLogin } = useContext(AppContent);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,6 +41,8 @@ const Login = () => {
       
         // Get the user object from getUserData
         const user = await getUserData();
+        // record login streak (client-side)
+        try { recordLogin(); } catch { /* ignore */ }
       
         // Show toast with correct first name
         toast.success(`Welcome Back, ${user?.firstName || "User"}!`,{
@@ -88,6 +90,8 @@ const Login = () => {
       
         // Get the user object from getAdminData
          const admin = await fetchAdminData();
+         // record login streak for providers too (optional)
+         try { recordLogin(); } catch { /* ignore */ }
       
         // Show toast with correct first name
         toast.success(`Welcome Back, ${admin?.title || ""} ${admin?.firstName || "Admin"}!!!`,{
@@ -194,7 +198,7 @@ const Login = () => {
               {/* Forgot Password */}
               <div className="w-full text-right text-sm">
                 <Link
-                  to="/forgot"
+                  to="/forgot-password"
                   className="text-gold font-extrabold hover:text-dark-gold transition duration-150"
                 >
                   Forgot Password?

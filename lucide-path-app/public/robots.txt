@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Tell crawlers not to index any drafts or staging paths (if present)
+# Disallow: /staging/

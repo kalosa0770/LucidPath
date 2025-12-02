@@ -1,4 +1,6 @@
 import Provider from "../models/providerModel.js";
+import Notification from '../models/notificationModel.js';
+import { sendPushToUser } from './notificationController.js';
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import path from "path";
@@ -186,6 +188,41 @@ export const updateProfile = async (req, res) => {
     res.json({ success: true, provider });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
+  }
+};
+
+// provider sends a message to a user (creates a provider_message notification)
+export const sendMessageToUser = async (req, res) => {
+  try {
+    const provider = req.provider; // providerAuth middleware adds req.provider
+    const { userId } = req.params;
+    const { message } = req.body || {};
+    if (!message) return res.status(400).json({ success:false, message: 'Message required' });
+
+    // note: providers are separate model; we want a user (not a provider). Try User model dynamically.
+    // require user model lazily to avoid circular imports up top.
+    const User = (await import('../models/userModel.js')).default;
+    const target = await User.findById(userId);
+    if (!target) return res.status(404).json({ success:false, message: 'User not found' });
+
+    const notif = await Notification.create({
+      recipient: target._id,
+      actor: provider._id,
+      actorModel: 'Provider',
+      type: 'provider_message',
+      message,
+      reference: null,
+    });
+
+    // try sending web push to the user if subscribed
+    sendPushToUser(target._id, { title: 'Message from provider', body: message, data: { type: 'provider_message' } }).catch(() => {});
+
+    // TODO: optionally send email to user via sendMail
+
+    res.json({ success:true, message: 'Message sent' });
+  } catch (err) {
+    console.error('sendMessageToUser', err);
+    res.status(500).json({ success:false, message: err.message });
   }
 };
 
