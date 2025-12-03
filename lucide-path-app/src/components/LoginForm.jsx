@@ -38,23 +38,23 @@ const Login = () => {
 
       if (res.data.success) {
         setIsLoggedin(true);
-      
+
         // Get the user object from getUserData
         const user = await getUserData();
         // record login streak (client-side)
         try { recordLogin(); } catch { /* ignore */ }
-      
+
         // Show toast with correct first name
-        toast.success(`Welcome Back, ${user?.firstName || "User"}!`,{
+        toast.success(`Welcome back ${user?.title ? user.title + ' ' : ''}${user?.firstName || "User"}!`,{
             className: "bg-gold text-dark-teal shadow-lg rounded-xl border-2 border-teal",
             bodyClassName: "font-nunito font-bold text-lg",
             progressClassName: "bg-dark-teal",
             autoClose: 2500,
         });
-      
+
         setTimeout(() => {
           navigate('/dashboard', { state: { fromLogin: true } });
-        }, 2000);
+        }, 1500);
       } else {
         toast.error(res.data.message || "Login failed.");
       }
@@ -87,23 +87,24 @@ const Login = () => {
 
       if (res.data.success) {
         setIsLoggedin(true);
-      
+
         // Get the user object from getAdminData
          const admin = await fetchAdminData();
          // record login streak for providers too (optional)
          try { recordLogin(); } catch { /* ignore */ }
-      
-        // Show toast with correct first name
-        toast.success(`Welcome Back, ${admin?.title || ""} ${admin?.firstName || "Admin"}!!!`,{
+
+        // Show friendly salutation using title + firstName
+        const salutation = admin?.title ? admin.title : '';
+        toast.success(`Welcome back ${salutation} ${admin?.firstName || 'Admin'}!`,{
             className: "bg-gold text-dark-teal shadow-lg rounded-xl border-2 border-teal",
             bodyClassName: "font-nunito font-bold text-lg",
             progressClassName: "bg-dark-teal",
-            autoClose: 2500,
+            autoClose: 2000,
         });
-      
+
         setTimeout(() => {
-          navigate('/admin-dashboard', { state: { fromLogin: true } });
-        }, 2000);
+          navigate('/provider-dashboard', { state: { fromLogin: true } });
+        }, 900);
       } else {
         toast.error(res.data.message || "Login failed.");
       }

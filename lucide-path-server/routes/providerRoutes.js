@@ -2,11 +2,14 @@ import express from "express";
 import upload from "../config/multer.js";
 import {
   registerProvider, loginProvider, getProviderProfile,
-  listProviders, approveProvider, rejectProvider, updateProfile
+  listProviders, approveProvider, rejectProvider, updateProfile,
+  sendMessageToUser, getDashboardStats, getRecentClients, getMoodTrends, getRiskAlerts,
+  getTodayAppointments, getRecentMessages, getPendingProviders,
+  listAvailableTherapists, getTherapistProfile, bookAppointment
 } from "../controllers/providerController.js";
 // import { upload } from "../utils/multerConfig.js";
 import auth from "../middleware/providerAuth.js";
-import adminOnly from "../middleware/admin.js";
+import superAdminAuth from "../middleware/superAdminAuth.js";
 
 const router = express.Router();
 
@@ -19,12 +22,20 @@ router.get("/me", auth, getProviderProfile);
 router.put("/me", auth, upload.single("profile"), updateProfile);
 
 // provider -> user messaging (requires providerAuth)
-import { sendMessageToUser } from '../controllers/providerController.js';
 router.post('/message/:userId', auth, sendMessageToUser);
 
-// Admin
-router.get("/", auth, adminOnly, listProviders); // ?status=pending
-router.post("/approve/:id", auth, adminOnly, approveProvider);
-router.post("/reject/:id", auth, adminOnly, rejectProvider);
+// Dashboard data endpoints (provider)
+router.get('/dashboard/stats', auth, getDashboardStats);
+router.get('/dashboard/clients', auth, getRecentClients);
+router.get('/dashboard/mood-trends', auth, getMoodTrends);
+router.get('/dashboard/risk-alerts', auth, getRiskAlerts);
+router.get('/dashboard/appointments', auth, getTodayAppointments);
+router.get('/dashboard/messages', auth, getRecentMessages);
+
+// Super Admin: Provider management (list, approve, reject)
+router.get("/", superAdminAuth, listProviders); // ?status=pending
+router.get("/pending", superAdminAuth, getPendingProviders);
+router.post("/approve/:id", superAdminAuth, approveProvider);
+router.post("/reject/:id", superAdminAuth, rejectProvider);
 
 export default router;

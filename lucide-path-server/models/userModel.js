@@ -48,6 +48,10 @@ const userSchema = new mongoose.Schema({
         default: 0
     }
 
+    ,
+    profileImageUrl: { type: String, default: '' },
+    bio: { type: String, default: '' }
+
 }, { timestamps: true });
 
 // Normalize/validate certain fields

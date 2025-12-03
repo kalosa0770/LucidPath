@@ -12,6 +12,8 @@ import moodRoutes from "./routes/moodRoutes.js";
 import journalRoutes from './routes/journalRoutes.js';
 
 import providerRoutes from "./routes/providerRoutes.js";
+import superAdminRoutes from "./routes/superAdminRoutes.js";
+import migrationRoutes from "./routes/migrationRoutes.js";
 import forumRoutes from "./routes/forumRoutes.js";
 import notificationRoutes from './routes/notificationRoutes.js';
 
@@ -49,6 +51,8 @@ app.use('/api/user', userRouter);
 app.use("/api/moods", moodRoutes);
 app.use('/api/journals', journalRoutes);
 app.use("/api/providers", providerRoutes);
+app.use("/api/super-admin", superAdminRoutes);
+app.use("/api/migration", migrationRoutes);
 app.use('/api/forum', forumRoutes);
 app.use('/api/notifications', notificationRoutes);
 

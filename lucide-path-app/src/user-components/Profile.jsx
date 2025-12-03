@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { AppContent } from "../context/AppContent";
 import { UserCircle2, Lock, LogOut, Settings, Book, CheckCircle, FileText } from "lucide-react";
 import { toast } from "react-toastify";
@@ -7,7 +8,14 @@ import FooterNav from "./FooterNav";
 
 
 const Profile = () => {
-  const { userData, getUserData, logout } = useContext(AppContent);
+  const { userData, getUserData, logout, moods, loginStreak } = useContext(AppContent);
+  const navigate = useNavigate();
+
+  const userDataEntriesCount = (u) => {
+    // prefer explicit journals array if available, otherwise 0
+    if (!u) return 0;
+    return (u.journals && Array.isArray(u.journals) ? u.journals.length : 0);
+  };
 
   useEffect(() => {
     if (!userData) {
@@ -31,11 +39,16 @@ const Profile = () => {
 
           {/* Profile Header */}
           <div className="flex flex-col items-center mb-8">
-            <UserCircle2 size={90} className="text-gold mb-3" />
+            {userData.profileImageUrl ? (
+              <img src={userData.profileImageUrl} alt="profile" className="w-24 h-24 rounded-full object-cover mb-3 border-2 border-gold" />
+            ) : (
+              <UserCircle2 size={90} className="text-gold mb-3" />
+            )}
             <h2 className="text-3xl font-bold text-gold mb-1">
               {userData.firstName} {userData.lastName}
             </h2>
             <p className="text-gray-400 text-sm">{userData.email}</p>
+            {userData.bio && <p className="text-gray-300 mt-2 text-sm max-w-lg text-center">{userData.bio}</p>}
           </div>
 
           {/* Stats Summary */}
@@ -47,13 +60,13 @@ const Profile = () => {
             </div>
             <div className="bg-white/10 p-4 rounded-xl">
               <FileText className="mx-auto mb-2 text-gold" size={26} />
-              <p className="text-xl font-bold">0</p>
+              <p className="text-xl font-bold">{(userData && userDataEntriesCount(userData)) || 0}</p>
               <p className="text-xs text-gray-400">Entries</p>
             </div>
             <div className="bg-white/10 p-4 rounded-xl">
               <CheckCircle className="mx-auto mb-2 text-gold" size={26} />
-              <p className="text-xl font-bold">0</p>
-              <p className="text-xs text-gray-400">Exercises</p>
+              <p className="text-xl font-bold">{userData?.moodCount ?? 0}</p>
+              <p className="text-xs text-gray-400">Mood Logs</p>
             </div>
           </div>
 
@@ -70,7 +83,34 @@ const Profile = () => {
           <div className="mb-8">
             <h3 className="text-lg font-semibold text-gold mb-2">Mood entries</h3>
             <div className="bg-white/10 p-4 rounded-xl text-center text-gray-400">
-              🏅 No entries yet. Log your mood to see your progress!
+              {moods && moods.length > 0 ? (
+                <div>
+                  <p className="text-2xl font-bold text-white">{moods.length}</p>
+                  <p className="text-sm text-gray-300">Recorded moods</p>
+                </div>
+              ) : (
+                <div>🏅 No entries yet. Log your mood to see your progress!</div>
+              )}
+            </div>
+          </div>
+
+          {/* Appointments Card */}
+          <div className="mb-8">
+            <h3 className="text-lg font-semibold text-gold mb-2">Appointments</h3>
+            <div className="bg-white/10 p-4 rounded-xl flex items-center justify-between">
+              <div>
+                <p className="text-xl font-bold">Manage your bookings</p>
+                <p className="text-sm text-gray-300">View upcoming appointments or book a new session</p>
+              </div>
+              <div className="flex flex-col items-end">
+                <button
+                  onClick={() => navigate('/appointments')}
+                  className="py-2 px-4 bg-gold text-dark-teal font-semibold rounded-lg hover:opacity-90 transition"
+                >
+                  My Appointments
+                </button>
+                <p className="text-xs text-gray-400 mt-2">No sensitive data shown here</p>
+              </div>
             </div>
           </div>
 

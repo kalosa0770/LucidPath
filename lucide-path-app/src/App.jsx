@@ -24,13 +24,17 @@ import TrackMoodPage from "./user-components/TrackMoodPage.jsx";
 import CommunityForum from "./user-components/CommunityForum.jsx";
 import NotificationsPage from "./user-components/NotificationsPage.jsx";
 import Profile from "./user-components/Profile.jsx";
+import UserAppointments from "./user-components/UserAppointments.jsx";
 import SplashScreen from "./components/SplashScreen.jsx";
 import EmailVerify from "./components/EmailVerify.jsx";
 import MobileLandingPage from "./components/MobileLandingPage.jsx";
 import ReadContent from "./user-components/ReadContent.jsx";
 
 // Admin Dashboard Components
-import AdminDashboard from "./admin-components/AdminDashboard.jsx";
+import ProviderDashboard from "./admin-components/ProviderDashboard.jsx";
+import AdminPanel from "./admin-components/AdminPanel.jsx";
+import AdminLogin from "./admin-components/AdminLogin.jsx";
+import AdminRegister from "./admin-components/AdminRegister.jsx";
 
 
 function App() {
@@ -131,12 +135,16 @@ function App() {
             <Route path="/community" element={<PageWrapper><CommunityForum /></PageWrapper>} />
             <Route path="/notifications" element={<PageWrapper><NotificationsPage /></PageWrapper>} />
             <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+            <Route path="/appointments" element={<PageWrapper><UserAppointments /></PageWrapper>} />
             <Route path="/read-content/:title" element={<ReadContent />} />
 
 
 
             {/* Admin Dashboard */}
-            <Route path="/admin-dashboard" element={<PageWrapper><AdminDashboard /></PageWrapper>} />
+            <Route path="/admin-login" element={<PageWrapper><AdminLogin /></PageWrapper>} />
+            <Route path="/admin-register" element={<PageWrapper><AdminRegister /></PageWrapper>} />
+            <Route path="/provider-dashboard" element={<PageWrapper><ProviderDashboard /></PageWrapper>} />
+            <Route path="/admin-dashboard" element={<PageWrapper><AdminPanel /></PageWrapper>} />
           </>
         ) : (
           <>
@@ -155,11 +163,15 @@ function App() {
             <Route path="/track" element={<PageWrapper><TrackMoodPage /></PageWrapper>} />
               <Route path="/community" element={<PageWrapper><CommunityForum /></PageWrapper>} />
             <Route path="/profile" element={<PageWrapper><Profile /></PageWrapper>} />
+            <Route path="/appointments" element={<PageWrapper><UserAppointments /></PageWrapper>} />
             <Route path="/read-content/:title" element={<ReadContent />} />
 
 
             {/* Admin Dashboard */}
-            <Route path="/admin-dashboard" element={<PageWrapper><AdminDashboard /></PageWrapper>} />
+            <Route path="/admin-login" element={<PageWrapper><AdminLogin /></PageWrapper>} />
+            <Route path="/admin-register" element={<PageWrapper><AdminRegister /></PageWrapper>} />
+            <Route path="/provider-dashboard" element={<PageWrapper><ProviderDashboard /></PageWrapper>} />
+            <Route path="/admin-dashboard" element={<PageWrapper><AdminPanel /></PageWrapper>} />
           </>
         )}
       </Routes>

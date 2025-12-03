@@ -279,7 +279,7 @@ export const AppContextProvider = (props) => {
         withCredentials: true,
       });
       if (data.success) {
-        return data.adminData;
+        return data.provider || data.adminData || null;
       } else {
         if (!quiet) toast.error(data.message);
         return null;

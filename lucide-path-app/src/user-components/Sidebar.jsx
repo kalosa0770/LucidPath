@@ -1,13 +1,15 @@
 import React from 'react';
-import { Home, BarChart, Book, Video, Zap } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Home, BarChart, Book, Video, Calendar, MessageCircle } from 'lucide-react';
 
 const Sidebar = () => {
+    const navigate = useNavigate();
     const menuItems = [
-        { icon: Home, label: 'Dashboard' },
-        { icon: BarChart, label: 'Track Mood' },
-        { icon: Book, label: 'Explore' },
-        { icon: Video, label: 'Therapy' },
-        { icon: Zap, label: 'Circle' }
+        { icon: Home, label: 'Dashboard', path: '/dashboard' },
+        { icon: BarChart, label: 'Track Mood', path: '/track' },
+        { icon: Book, label: 'Explore', path: '/explore' },
+        { icon: Calendar, label: 'Appointments', path: '/appointments' },
+        { icon: MessageCircle, label: 'Community', path: '/community' }
     ];
 
     return (
@@ -29,6 +31,7 @@ const Sidebar = () => {
                     return (
                         <button
                             key={index}
+                            onClick={() => navigate(item.path)}
                             className="flex items-center gap-4 text-white hover:text-[#FFD700] 
                                      hover:bg-[#FFD700]/10 transition-all duration-200 rounded-xl 
                                      py-3 px-4 w-full group"
