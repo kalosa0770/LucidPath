@@ -50,6 +50,20 @@ const CommunityForum = () => {
     t.title.toLowerCase().includes(query.toLowerCase()) || t.excerpt.toLowerCase().includes(query.toLowerCase())
   ));
 
+  // Helper to safely render author/actor display names (handles strings or objects)
+  const getDisplayName = (actor) => {
+    if (!actor) return 'Anonymous';
+    if (typeof actor === 'string') return actor;
+    if (typeof actor === 'object') {
+      if (actor.firstName || actor.lastName) return `${actor.firstName || ''} ${actor.lastName || ''}`.trim();
+      if (actor.email) return actor.email;
+      // fallback to a simple id/email representation
+      if (actor._id) return actor.email || actor._id.toString();
+      try { return JSON.stringify(actor); } catch { return 'Anonymous'; }
+    }
+    return String(actor);
+  };
+
   const handleCreate = () => {
     if (!newTitle.trim()) return;
 
@@ -250,7 +264,7 @@ const CommunityForum = () => {
                     ) : results.length === 0 ? (
                     <div className="p-6 rounded-xl bg-white/5 border border-white/10 text-center text-gray-300">No threads found — try creating one.</div>
                     ) : results.map(t => (
-                    <article key={t.id} className="p-4 rounded-xl bg-white/5 border border-white/10 hover:shadow-lg transition-shadow duration-200">
+                    <article key={t._id || t.id} className="p-4 rounded-xl bg-white/5 border border-white/10 hover:shadow-lg transition-shadow duration-200">
                         <div className="flex items-start justify-between gap-3">
                         <div>
                             <h3 className="text-lg font-bold text-white">{t.title}</h3>
@@ -342,7 +356,7 @@ const CommunityForum = () => {
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <h3 className="text-lg font-bold">{selected.title}</h3>
-                          <p className="text-sm text-gray-400 mt-1">By {selected.author?.firstName || selected.author?.email || selected.author}</p>
+                          <p className="text-sm text-gray-400 mt-1">By {getDisplayName(selected.author)}</p>
                         </div>
                         <div className="text-xs text-gray-400">{selected.postsCount || 0} posts</div>
                       </div>
@@ -353,7 +367,7 @@ const CommunityForum = () => {
                           {posts.length === 0 ? <div className="text-sm text-gray-400 mt-3">No replies yet.</div> : posts.map(p => (
                                   <div key={p._id} className="mt-3 p-3 rounded-lg bg-white/3 border border-white/5">
                                     <div className="flex items-center justify-between">
-                                      <div className="text-sm font-semibold">{p.author?.firstName || p.author?.email || 'Anonymous'}</div>
+                                      <div className="text-sm font-semibold">{getDisplayName(p.author)}</div>
                                       <div className="text-xs text-gray-400">{new Date(p.createdAt).toLocaleString()}</div>
                                     </div>
                                     <div className="text-sm mt-2 text-gray-200">{p.content}</div>

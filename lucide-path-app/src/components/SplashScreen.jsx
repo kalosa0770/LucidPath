@@ -40,7 +40,7 @@ const SplashScreen = () => {
           <motion.img
             src={logo}
             alt="Lucid Path"
-            className="w-28 h-28 mb-6"
+            className="w-28 h-28 mb-6 rounded-2xl shadow-lg"
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             transition={{ duration: 1, ease: "easeOut" }}

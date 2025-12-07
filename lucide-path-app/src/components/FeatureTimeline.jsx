@@ -1,22 +1,23 @@
 import React from "react";
-import { Smile, FileText, BookOpenText } from "lucide-react";
+import { Smile, Zap, Video } from "lucide-react";
 
 const FeatureTimeline = () => {
+
   const features = [
     {
       icon: <Smile size={28} className="text-gold" />,
-      title: "Mood Tracking",
-      description: "Log your daily mood and track trends over time.",
+      title: "Mood Tracking & Journaling",
+      description: "Log your daily mood, track trends over time, write your thoughts and reflect on your day.",
     },
     {
-      icon: <FileText size={28} className="text-gold" />,
-      title: "Journaling",
-      description: "Write your thoughts and reflect on your day.",
+      icon: <Zap size={28} className="text-gold" />,
+      title: "Resources and Community Support",
+      description: "Access curated guides, tutorials and connect with your peers for daily support.",
     },
     {
-      icon: <BookOpenText size={28} className="text-gold" />,
-      title: "Resources",
-      description: "Access curated guides and tutorials.",
+      icon: <Video size={28} className="text-gold" />,
+      title: "Therapy Sessions",
+      description: "Book confidential sessions with licensed therapists directly through the app.",
     },
   ];
 
